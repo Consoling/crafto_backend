@@ -5,12 +5,10 @@ const router = express.Router();
 const twilio = require('twilio');
 const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
-// Endpoint to handle user signup or resend OTP if phone number exists but is not verified
 router.post('/', async (req, res) => {
     const { phoneNumber, password } = req.body;
 
-    console.log(phoneNumber, password);
-
+    
     if (!phoneNumber || !password) {
         return res.status(400).json({ message: 'Phone number and password are required' });
     }

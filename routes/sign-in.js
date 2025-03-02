@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
                     to: `${phoneNumber}`
                 });
 
-                return res.status(200).json({ message: 'OTP sent for verification' });
+                return res.status(201).json({ message: 'OTP sent for verification' });
 
             } catch (error) {
                 console.error('Error sending OTP:', error);
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
         }
 
 
-        return res.status(200).json({
+        return res.status(201).json({
             message: 'Login successful',
             userId: existingUser._id,
             phoneNumber: existingUser.phoneNumber,

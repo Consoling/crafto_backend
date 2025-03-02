@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
 
     
     const token = req.headers['authorization']?.split(' ')[1];
-    console.log(token)// Extract token from "Bearer <token>"
+  
 
     if (!token || token === null || token === undefined) {
         return res.status(401).json({ message: 'No token provided, authorization denied' });
