@@ -18,6 +18,7 @@ router.post('/', async (req, res) => {
     try {
 
         const user = await User.findOne({ phoneNumber });
+        var redirectTo = ''
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -36,6 +37,13 @@ router.post('/', async (req, res) => {
             JWT_SECRET,
             { expiresIn: REFRESH_TOKEN_EXPIRATION }
         );
+
+        if (user.username) {
+            redirectTo = '/home';
+        } else {
+            redirectTo = '/user-handle-creation';
+        }
+        
 
         if (accessToken && refreshToken) {
             user.accessToken = accessToken;
@@ -58,7 +66,7 @@ router.post('/', async (req, res) => {
             message: 'Token generated successfully',
             accessToken,
             userId: user._id,
-            redirectTo: '/user-handle-creation',
+            redirectTo: redirectTo,
         });
     } catch (error) {
         console.error(error);
