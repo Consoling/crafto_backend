@@ -25,6 +25,7 @@ const resendOTPRouter = require('./routes/resend-otp');
 const tokenGenRouter = require('./routes/session-creation');
 const updateProfileRouter = require('./routes/update-profile')
 const loginRouter = require('./routes/sign-in');
+const getDataRouter = require('./routes/fetch-data')
 
 app.use('/', indexRouter);
 app.use('/signup', signupRouter);
@@ -34,6 +35,7 @@ app.use('/api/v1/resend-otp', resendOTPRouter)
 app.use('/api/v1/generate-token', tokenGenRouter)
 app.use('/api/v1/update-profile', updateProfileRouter)
 app.use('/api/v1/login', loginRouter)
+app.use('/api/v1/user/data/:userID', getDataRouter)
 
 mongoose.connect(dbURI)
     .then(() => {

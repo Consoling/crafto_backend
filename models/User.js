@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6,  // You can change this based on your requirements
+    minlength: 6,
   },
   isVerified: {
     type: Boolean,
@@ -36,6 +36,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  email: {
+    type: String,
+    required: false,
+    unique: true,
+    lowercase: true,
+    match: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+  },
+  language: {
+    type: String,
+    default: "en",
+  },
+  accountType: {
+    type: String,
+    enum: ['free', 'premium'],
+    default: 'free'
+  },
+  isPremium: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Encrypt the password before saving it to the database
