@@ -35,7 +35,7 @@ app.use('/api/v1/resend-otp', resendOTPRouter)
 app.use('/api/v1/generate-token', tokenGenRouter)
 app.use('/api/v1/update-profile', updateProfileRouter)
 app.use('/api/v1/login', loginRouter)
-app.use('/api/v1/user/data/:userID', getDataRouter)
+app.use('/api/v1/user', getDataRouter)
 
 mongoose.connect(dbURI)
     .then(() => {
