@@ -49,8 +49,8 @@ const userSchema = new mongoose.Schema({
   },
   accountType: {
     type: String,
-    enum: ['free', 'premium'],
-    default: 'free'
+    enum: ['Personal', 'Business'],
+    default: 'Personal'
   },
   isPremium: {
     type: Boolean,
