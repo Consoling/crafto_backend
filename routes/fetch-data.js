@@ -11,12 +11,13 @@ router.get('/', verifyToken, async (req, res) => {
 
     try {
         // Query the user data from MongoDB by userID
-        const user = await User.findById(userID).select(
+        const user = await User.findById(_id).select(
             'username userID phoneNumber email language accountType isPremium isVerified'
         );
 
         // If no user is found
         if (!user) {
+            console.log('usernotFound')
             return res.status(404).json({ message: 'User not found' });
         }
 
