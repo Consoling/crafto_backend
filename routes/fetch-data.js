@@ -8,7 +8,7 @@ const verifyToken = require('../middleware/verifyToken'); // Example middleware
 // GET route to fetch user data
 router.get('/', verifyToken, async (req, res) => {
     const { userID } = req.params; // Extract userID from the route parameter
-
+    const _id = userID;
     try {
         // Query the user data from MongoDB by userID
         const user = await User.findById(_id).select(
