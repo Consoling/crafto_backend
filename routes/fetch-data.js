@@ -1,17 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User'); // Import your User model
+const User = require('../models/User'); 
 
-// Middleware to verify JWT token (if authentication is required)
-const verifyToken = require('../middleware/verifyToken'); // Example middleware
+const verifyToken = require('../middleware/verifyToken');
 
-// GET route to fetch user data
 router.get('/data/:userID', verifyToken, async (req, res) => {
-    const { userID } = req.params; // Extract userID from the route parameter
+    const { userID } = req.params; 
     console.log(req.params)
     const _id = userID;
     try {
-        // Query the user data from MongoDB by userID
         const user = await User.findById(_id).select(
             'username userID phoneNumber email language accountType isPremium isVerified'
         );
@@ -22,7 +19,6 @@ router.get('/data/:userID', verifyToken, async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Return the user data
         res.status(200).json({
             userID: user._id,
             username: user.username,

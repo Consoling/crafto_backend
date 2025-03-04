@@ -27,6 +27,7 @@ const updateProfileRouter = require('./routes/update-profile')
 const loginRouter = require('./routes/sign-in');
 const logoutRouter = require('./routes/sign-out');
 const getDataRouter = require('./routes/fetch-data')
+const updateDataRouter = require('./routes/update-data')
 
 app.use('/', indexRouter);
 app.use('/signup', signupRouter);
@@ -39,6 +40,7 @@ app.use('/api/v1/login', loginRouter)
 app.use('/api/v1/logout', logoutRouter)
 
 app.use('/api/v1/user', getDataRouter)
+app.use('/api/v1/user', updateDataRouter)
 
 mongoose.connect(dbURI)
     .then(() => {

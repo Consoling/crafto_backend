@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-craftobackend-dev-f21d2-authRole",
+      "UnauthRoleArn": "arn:aws:iam::183295448392:role/amplify-craftobackend-dev-f21d2-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::183295448392:role/amplify-craftobackend-dev-f21d2-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-craftobackend-dev-f21d2-deployment",
+      "UnauthRoleName": "amplify-craftobackend-dev-f21d2-unauthRole",
+      "StackName": "amplify-craftobackend-dev-f21d2",
+      "StackId": "arn:aws:cloudformation:ap-south-1:183295448392:stack/amplify-craftobackend-dev-f21d2/8f912980-f8e1-11ef-8b28-0ae727aa67eb",
+      "AmplifyAppId": "d1dtkyjjl824pr"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d1dtkyjjl824pr",
+          "type": "cicd"
+        }
+      }
+    }
+  }
+}
