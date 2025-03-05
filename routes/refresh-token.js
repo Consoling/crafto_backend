@@ -1,3 +1,8 @@
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const router = express.Router();
+const User = require('../models/User');
+
 const JWT_EXPIRATION = '4h'; 
 
 router.post('/', (req, res) => {
