@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
-const JWT_EXPIRATION = '1h'; 
+const JWT_EXPIRATION = '4h'; 
 const REFRESH_TOKEN_EXPIRATION = '7d';
 
 router.post('/', async (req, res) => {

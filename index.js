@@ -26,6 +26,7 @@ const tokenGenRouter = require('./routes/session-creation');
 const updateProfileRouter = require('./routes/update-profile')
 const loginRouter = require('./routes/sign-in');
 const logoutRouter = require('./routes/sign-out');
+const refreshTokenRouter = require('./routes/refresh-token');
 const getDataRouter = require('./routes/fetch-data')
 const updateDataRouter = require('./routes/update-data')
 
@@ -38,7 +39,7 @@ app.use('/api/v1/generate-token', tokenGenRouter)
 app.use('/api/v1/update-profile', updateProfileRouter)
 app.use('/api/v1/login', loginRouter)
 app.use('/api/v1/logout', logoutRouter)
-
+app.use('/api/v1/refresh-token', refreshTokenRouter)
 app.use('/api/v1/user', getDataRouter)
 app.use('/api/v1/user', updateDataRouter)
 
