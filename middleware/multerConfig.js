@@ -1,40 +1,44 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+
+
+const avatarsDirectory = 'uploads/avatars/';
+if (!fs.existsSync(avatarsDirectory)) {
+  fs.mkdirSync(avatarsDirectory, { recursive: true });
+}
 
 // Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/avatars/'); 
+
+    cb(null, avatarsDirectory);
   },
   filename: (req, file, cb) => {
-
     const userId = req.userId; 
-    
     if (!userId) {
       return cb(new Error('User ID is required'), null);
     }
 
-    const fileExtension = path.extname(file.originalname);
-    const fileName = `${userId}${fileExtension}`;
-    cb(null, fileName);
+    const fileExtension = path.extname(file.originalname);  
+    const fileName = `${userId}${fileExtension}`;  
+    cb(null, fileName);  
   },
 });
 
 
 const fileFilter = (req, file, cb) => {
-  console.log(file.mimetype); 
   if (file.mimetype.startsWith('image/')) {
-    cb(null, true); // Accept the file if it's an image
+    cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed!'), false); // Reject non-image files
+    cb(new Error('Only image files are allowed!'), false);
   }
 };
 
-// Initialize Multer with storage configuration and file filter
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 25 * 1024 * 1024 }, // Limit file size to 25MB
+  limits: { fileSize: 25 * 1024 * 1024 },  // 25MB file size limit
 });
 
 module.exports = upload;
