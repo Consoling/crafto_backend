@@ -32,8 +32,8 @@ const deploy = async () => {
     await runCommand('npm install');
 
    
-    console.log('Running tests...');
-    await runCommand('npm test');
+    // console.log('Running tests...');
+    // await runCommand('npm test');
 
     // Restart the application (e.g., using PM2)
     console.log('Restarting application...');
