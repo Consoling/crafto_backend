@@ -18,30 +18,32 @@ const PORT = process.env.CRAFTO_MAINLINE_SERVER_PORT;
 const dbURI = process.env.CRAFTO_MONGODB_SERVER_URI;
 
 const indexRouter = require('./routes/index');
-const initialSignupRouter = require('./routes/initial-signup');
-const signupRouter = require('./routes/signup');
-const otpAuthRouter = require('./routes/otp-auth');
-const resendOTPRouter = require('./routes/resend-otp');
-const tokenGenRouter = require('./routes/session-creation');
+const initialSignupRouter = require('./routes/signup');
+// const signupRouter = require('./routes/signup');
+// const otpAuthRouter = require('./prototypes/otp-auth');
+// const resendOTPRouter = require('./prototypes/resend-otp');
+// const tokenGenRouter = require('./prototypes/session-creation');
 const updateProfileRouter = require('./routes/update-profile')
-const loginRouter = require('./routes/sign-in');
+const loginRouter = require('./routes/signin');
 const logoutRouter = require('./routes/sign-out');
 const refreshTokenRouter = require('./routes/refresh-token');
 const getDataRouter = require('./routes/fetch-data')
 const updateDataRouter = require('./routes/update-data')
+const CronDeployRouter = require('./routes/cron-update')
 
 app.use('/', indexRouter);
-app.use('/signup', signupRouter);
+// app.use('/signup', signupRouter);
 app.use('/api/v1/initial-signup', initialSignupRouter)
-app.use('/api/v1/otp-auth', otpAuthRouter)
-app.use('/api/v1/resend-otp', resendOTPRouter)
-app.use('/api/v1/generate-token', tokenGenRouter)
+// app.use('/api/v1/otp-auth', otpAuthRouter)
+// app.use('/api/v1/resend-otp', resendOTPRouter)
+// app.use('/api/v1/generate-token', tokenGenRouter)
 app.use('/api/v1/update-profile', updateProfileRouter)
 app.use('/api/v1/login', loginRouter)
 app.use('/api/v1/logout', logoutRouter)
 app.use('/api/v1/refresh-token', refreshTokenRouter)
 app.use('/api/v1/user', getDataRouter)
 app.use('/api/v1/user', updateDataRouter)
+app.use('/api/v1/cron-update', CronDeployRouter)
 
 mongoose.connect(dbURI)
     .then(() => {

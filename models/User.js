@@ -55,7 +55,11 @@ const userSchema = new mongoose.Schema({
   isPremium: {
     type: Boolean,
     default: false
-  }
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now, 
+  },
 });
 
 // Encrypt the password before saving it to the database

@@ -1,105 +1,104 @@
 const express = require('express');
+const User = require('../models/User');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const { body, validationResult } = require('express-validator');
-const multer = require('multer');
-const path = require('path');
+const jwt = require('jsonwebtoken');
 
-const User = require('../models/User')
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+const JWT_EXPIRATION = '4h';
+const REFRESH_TOKEN_EXPIRATION = '7d';
 
+router.post('/', async (req, res) => {
+  const { phoneNumber, password } = req.body;
 
-
-// File upload hander (Multer)
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));  // Add timestamp to avoid name clashes
+  if (!phoneNumber || !password) {
+    return res.status(400).json({ message: 'Phone number and password are required' });
   }
-});
 
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png|gif/;  // Allowed image file types
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
+  try {
+    // Check if the phone number is already taken
+    const existingUser = await User.findOne({ phoneNumber });
 
-    if (extname && mimetype) {
-      return cb(null, true);  // Allow file
-    } else {
-      return cb(new Error('Invalid file type. Only jpg, jpeg, png, and gif are allowed.'));
-    }
-  },
-  limits: { fileSize: 5 * 1024 * 1024 }  // Max file size 5MB
-});
+    if (existingUser) {
+      // If the user exists, create a session
+      const accessToken = jwt.sign(
+        { userId: existingUser._id, phoneNumber: existingUser.phoneNumber, isVerified: existingUser.isVerified },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRATION }
+      );
 
+      const refreshToken = jwt.sign(
+        { userId: existingUser._id, phoneNumber: existingUser.phoneNumber },
+        JWT_SECRET,
+        { expiresIn: REFRESH_TOKEN_EXPIRATION }
+      );
 
-/* POST Sign-Up route. */
-router.post(
-  '/',
-  body('fullName').isLength({ min: 3 }).withMessage('Full name is required and should be at least 3 characters long'),
-  body('mobileNumber')
-    .isNumeric().withMessage('Mobile number must be numeric')
-    .isLength({ min: 10, max: 10 }).withMessage('Mobile number must be exactly 10 digits long'),
-  body('email').isEmail().withMessage('Invalid email address'),
-  body('password')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/)
-    .withMessage('Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
-  upload.single('profilePicture'),
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+      existingUser.accessToken = accessToken;
+      existingUser.refreshToken = refreshToken;
+      await existingUser.save();
 
-    const { fullName, mobileNumber, email, password } = req.body;
-    const trimmedPassword = password.trim(); 
-    const profilePicture = req.file ? req.file.path : null;
-
-    console.log("Request body:", req.body);
-    console.log("Trimmed password:", trimmedPassword);
-
-    User.findOne({ email })
-      .then(userExists => {
-        if (userExists) {
-          return res.status(400).json({ message: 'User already exists' });
-        }
-
-        console.log("Plaintext password before hashing:", trimmedPassword);
-        bcrypt.hash(trimmedPassword, 10, (err, hashedPassword) => {
-          if (err) {
-            return res.status(500).json({ message: 'Error hashing password' });
-          }
-
-          console.log("Hashed password:", hashedPassword);
-
-          const newUser = new User({
-            fullName,
-            mobileNumber,
-            email,
-            password: hashedPassword,
-            profilePicture,
-          });
-
-          newUser
-            .save()
-            .then(user => {
-              res.status(201).json({ message: 'User signed up successfully', user });
-            })
-            .catch(err => {
-              res.status(500).json({ message: 'Error saving user to database', error: err });
-            });
-        });
-      })
-      .catch(err => {
-        res.status(500).json({ message: 'Error finding user', error: err });
+      res.cookie('refresh_token', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: 'Strict',
       });
+
+      const redirectTo = existingUser.username ? '/home' : '/user-handle-creation';
+
+      return res.status(200).json({
+        message: 'User logged in successfully',
+        accessToken,
+        userId: existingUser._id,
+        redirectTo,
+      });
+    } else {
+      // If phone number doesn't exist, create a new user
+      const newUser = new User({
+        phoneNumber,
+        password,
+      });
+
+      await newUser.save();
+
+      // Create JWT Access Token (short-lived)
+      const accessToken = jwt.sign(
+        { userId: newUser._id, phoneNumber: newUser.phoneNumber, isVerified: newUser.isVerified },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRATION }
+      );
+
+      // Create JWT Refresh Token (long-lived)
+      const refreshToken = jwt.sign(
+        { userId: newUser._id, phoneNumber: newUser.phoneNumber },
+        JWT_SECRET,
+        { expiresIn: REFRESH_TOKEN_EXPIRATION }
+      );
+
+      newUser.accessToken = accessToken;
+      newUser.refreshToken = refreshToken;
+      await newUser.save();
+
+      res.cookie('refresh_token', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: 'Strict',
+      });
+
+      const redirectTo = newUser.username ? '/home' : '/user-handle-creation';
+
+      res.status(201).json({
+        message: 'User signed up successfully',
+        accessToken,
+        userId: newUser._id,
+        createdAt: newUser.createdAt, 
+        redirectTo,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-);
-
-
-
+});
 
 module.exports = router;
