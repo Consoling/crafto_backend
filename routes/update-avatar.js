@@ -15,6 +15,7 @@ console.log('Request Body be like: ',req.body, 'and Request Headers be like: ',r
 
 
     if (!token || token === null || token === undefined) {
+        console.log('No token provided, authorization denied')
         return res.status(401).json({ message: 'No token provided, authorization denied' });
     }
 
@@ -24,6 +25,7 @@ console.log('Request Body be like: ',req.body, 'and Request Headers be like: ',r
         req.userId = decoded.userId;
         next();
     } catch (error) {
+        console.error(error);
         return res.status(401).json({ message: 'Invalid or expired token' });
     }
 };
