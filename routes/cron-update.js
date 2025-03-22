@@ -9,7 +9,7 @@ const deploy = require('../cron-job/deploymentScript');
 const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET; 
 
 // Webhook endpoint
-router.post('/webhook', (req, res) => {
+router.post('/', (req, res) => {
   const signature = req.headers['x-hub-signature-256'];
   const payload = JSON.stringify(req.body);
 
