@@ -35,10 +35,17 @@ const verifyToken = (req, res, next) => {
 
 router.put('/', verifyToken, upload.single('avatar'), async (req, res) => {
     try {
+
+        if (!req.file) {
+            console.log('No file uploaded.');
+            return res.status(400).json({ message: 'No file uploaded, please select an image.' });
+          } else {
+            console.log('File uploaded:', req.file);  // Log the file details
+          }
         const userId = req.userId;
         const profilePicture = req.file ? req.file.path : null;
 
-        // Update the user's profile picture in the database
+        
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             { profilePicture }, // Update the profilePicture field
