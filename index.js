@@ -24,6 +24,7 @@ const initialSignupRouter = require('./routes/signup');
 // const resendOTPRouter = require('./prototypes/resend-otp');
 // const tokenGenRouter = require('./prototypes/session-creation');
 const updateProfileRouter = require('./routes/update-profile')
+const updateAvatarRouter = require('./routes/update-avatar')
 const loginRouter = require('./routes/signin');
 const logoutRouter = require('./routes/sign-out');
 const refreshTokenRouter = require('./routes/refresh-token');
@@ -38,6 +39,7 @@ app.use('/api/v1/initial-signup', initialSignupRouter)
 // app.use('/api/v1/resend-otp', resendOTPRouter)
 // app.use('/api/v1/generate-token', tokenGenRouter)
 app.use('/api/v1/update-profile', updateProfileRouter)
+app.use('/api/v1/update-avatar', updateAvatarRouter)
 app.use('/api/v1/login', loginRouter)
 app.use('/api/v1/logout', logoutRouter)
 app.use('/api/v1/refresh-token', refreshTokenRouter)

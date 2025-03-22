@@ -1,6 +1,6 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const router = express.Router();
+const upload = require('../middleware/multerConfig');
 const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
@@ -8,9 +8,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 const verifyToken = (req, res, next) => {
 
-    
+
     const token = req.headers['authorization']?.split(' ')[1];
-  
+
 
     if (!token || token === null || token === undefined) {
         return res.status(401).json({ message: 'No token provided, authorization denied' });
@@ -27,36 +27,26 @@ const verifyToken = (req, res, next) => {
 };
 
 
-router.put('/', verifyToken, async (req, res) => {
-    const { userId, username } = req.body;
-    
-    console.log('Request Body be like: ',req.body)
 
-
-
+router.put('/', verifyToken, upload.single('avatar'), async (req, res) => {
     try {
-        const user = await User.findById(userId);
+        const userId = req.userId;
+        const profilePicture = req.file ? req.file.path : null;
 
-        if (!user) {
+        // Update the user's profile picture in the database
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePicture }, // Update the profilePicture field
+            { new: true }, // Return the updated user
+        );
+
+        if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        if (username) {
-            user.username = username;
-        }
-
-        // if (profilePicture) {
-        //     user.profilePicture = profilePicture;
-        // }
-
-        await user.save();
-
         res.status(200).json({
-            message: 'Profile updated successfully',
-            user: {
-                username: user.username,
-                // profilePicture: user.profilePicture,
-            }
+            message: 'Avatar updated successfully',
+            user: updatedUser,
         });
     } catch (error) {
         console.error(error);
