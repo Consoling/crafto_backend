@@ -91,7 +91,7 @@ router.post('/', async (req, res) => {
         message: 'User signed up successfully',
         accessToken,
         userId: newUser._id,
-        createdAt: newUser.createdAt, 
+        // createdAt: newUser.createdAt, 
         redirectTo,
       });
     }
