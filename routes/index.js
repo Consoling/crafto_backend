@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const os = require('os');
-const { checkDiskSpace } = require('check-disk-space');
+const mongoose = require('mongoose');
+const pm2 = require('pm2'); 
+
 
 
 router.ws('/', (ws, req) => {
@@ -24,22 +26,67 @@ router.ws('/', (ws, req) => {
   });
 });
 
-// Utility function to emit system stats
-function sendStatsToClient(ws) {
+
+async function getMongoDBStatus() {
+  try {
+    
+    if (mongoose.connection.readyState === 1) {
+      return { status: 'connected', message: 'MongoDB connected' };
+    } else {
+      return { status: 'disconnected', message: 'MongoDB disconnected' };
+    }
+  } catch (err) {
+    return { status: 'error', message: 'MongoDB connection error: ' + err.message };
+  }
+ 
+}
+
+async function sendStatsToClient(ws) {
   const cpuUsage = getCpuUsage();
   const memoryUsage = getMemoryUsage();
   const loadAverages = getLoadAverages();
+  const mongoDBStatus = await getMongoDBStatus(); // MongoDB status
+  const pm2Status = await getPM2Status(); 
   const stats = {
     cpuUsage,
     memoryUsage,
     loadAverages,
     uptime: os.uptime(),
+    mongoDBStatus,
+    pm2Status
   };
 
   ws.send(JSON.stringify(stats));
 }
 
-// Utility functions to gather system stats
+function getPM2Status() {
+  return new Promise((resolve, reject) => {
+    pm2.connect((err) => {
+      if (err) {
+        reject({ status: 'error', message: 'PM2 connection error: ' + err.message });
+        return;
+      }
+
+      pm2.list((err, processList) => {
+        if (err) {
+          reject({ status: 'error', message: 'PM2 list error: ' + err.message });
+          return;
+        }
+
+       
+        const pm2Status = processList.map(process => ({
+          name: process.name,
+          status: process.pm2_env.status, // Check if it's online or not
+        }));
+
+        resolve({ status: 'ok', message: pm2Status });
+      });
+    });
+  });
+}
+
+
+
 function getCpuUsage() {
   const cpus = os.cpus();
   let user = 0, nice = 0, sys = 0, idle = 0, irq = 0;
