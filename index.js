@@ -32,6 +32,10 @@ const getDataRouter = require('./routes/fetch-data')
 const updateDataRouter = require('./routes/update-data')
 const CronDeployRouter = require('./routes/cron-update')
 
+// Admin Routes
+
+const adminSignupRouter = require('./routes/admin/sign-up');
+
 app.use('/', indexRouter);
 // app.use('/signup', signupRouter);
 app.use('/api/v1/initial-signup', initialSignupRouter)
@@ -46,6 +50,9 @@ app.use('/api/v1/refresh-token', refreshTokenRouter)
 app.use('/api/v1/user', getDataRouter)
 app.use('/api/v1/user', updateDataRouter)
 app.use('/api/v1/cron-update', CronDeployRouter)
+
+// Admin Routes
+app.use('/api/v1/admin/sign-up', adminSignupRouter)
 
 mongoose.connect(dbURI)
     .then(() => {
