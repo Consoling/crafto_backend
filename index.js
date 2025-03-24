@@ -5,7 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+const expressWs = require('express-ws');
 
 const app = express();
 app.use(logger('dev'));
@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors())
+expressWs(app); 
 
 const PORT = process.env.CRAFTO_MAINLINE_SERVER_PORT;
 const dbURI = process.env.CRAFTO_MONGODB_SERVER_URI;
@@ -37,7 +38,7 @@ const CronDeployRouter = require('./routes/cron-update')
 const adminSignupRouter = require('./routes/admin/sign-up');
 const adminSigninRouter = require('./routes/admin/sign-in');
 
-app.use('/', indexRouter);
+app.use('/api/v1/limits', indexRouter);
 // app.use('/signup', signupRouter);
 app.use('/api/v1/initial-signup', initialSignupRouter)
 // app.use('/api/v1/otp-auth', otpAuthRouter)
