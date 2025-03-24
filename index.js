@@ -35,6 +35,7 @@ const CronDeployRouter = require('./routes/cron-update')
 // Admin Routes
 
 const adminSignupRouter = require('./routes/admin/sign-up');
+const adminSigninRouter = require('./routes/admin/sign-in');
 
 app.use('/', indexRouter);
 // app.use('/signup', signupRouter);
@@ -53,6 +54,7 @@ app.use('/api/v1/cron-update', CronDeployRouter)
 
 // Admin Routes
 app.use('/api/v1/admin/sign-up', adminSignupRouter)
+app.use('/api/v1/admin/sign-in', adminSigninRouter)
 
 mongoose.connect(dbURI)
     .then(() => {

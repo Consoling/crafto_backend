@@ -25,22 +25,37 @@ const adminSchema = new mongoose.Schema({
     type: String,
     default: 'admin',
   },
+  token: {
+    type: String,
+    default: null,
+  },
+  tokenCreatedAt: {
+    type: Date,
+    default: null,
+  },
 }, {
-  timestamps: true, 
+  timestamps: true,
 });
 
 
-adminSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    return next(); 
+adminSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
   }
-  
-  
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
+adminSchema.methods.comparePassword = function (password) {
+  return bcrypt.compare(password, this.password);
+}
+adminSchema.methods.generateAuthToken = function () {
+  const payload = { userId: this._id, role: this.role };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
+  
+  this.token = token; 
+  this.tokenCreatedAt = new Date(); 
+  return token;
+};
 
 const Admin = mongoose.model('Admin', adminSchema);
 

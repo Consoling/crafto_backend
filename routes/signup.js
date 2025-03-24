@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
         redirectTo,
       });
     } else {
-      // If phone number doesn't exist, create a new user
+     
       const newUser = new User({
         phoneNumber,
         password,

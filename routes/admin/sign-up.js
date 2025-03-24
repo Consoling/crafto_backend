@@ -25,13 +25,13 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'Username already taken.' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+
+
 
     const newAdmin = new Admin({
       username,
       email,
-      password: hashedPassword,
+      password: password,
       role: 'admin',
     });
 
@@ -45,13 +45,16 @@ router.post('/', async (req, res) => {
     });
 
     await newAdminIP.save();
+    const token = newAdmin.generateAuthToken();
 
     res.status(201).json({
       message: 'Admin created successfully!',
+      token,
       admin: {
         username: newAdmin.username,
         email: newAdmin.email,
         role: newAdmin.role,
+        _id: newAdmin._id,
       },
     });
   } catch (error) {

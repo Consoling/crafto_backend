@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
         if (!isPasswordCorrect) {
-            return res.status(401).json({ message: 'Invalid password' });
+            return res.status(401).json({ message: 'Invalid Credentials' });
         }
 
         // Create JWT Access Token (short-lived)
