@@ -37,6 +37,11 @@ const CronDeployRouter = require('./routes/cron-update')
 
 const adminSignupRouter = require('./routes/admin/sign-up');
 const adminSigninRouter = require('./routes/admin/sign-in');
+// Colors Admin Route
+const createColorsRouter = require('./routes/admin/colors/create-colors')
+const getColorsRouter = require('./routes/admin/colors/get-colors')
+const createTagRouter = require('./routes/admin/tags/create-tag')
+const getTagsRouter = require('./routes/admin/tags/get-tags')
 
 app.use('/api/v1/limits', indexRouter);
 // app.use('/signup', signupRouter);
@@ -56,6 +61,10 @@ app.use('/api/v1/cron-update', CronDeployRouter)
 // Admin Routes
 app.use('/api/v1/admin/sign-up', adminSignupRouter)
 app.use('/api/v1/admin/sign-in', adminSigninRouter)
+app.use('/api/v1/admin/create-color', createColorsRouter)
+app.use('/api/v1/admin/get-colors', getColorsRouter)
+app.use('/api/v1/admin/create-tag', createTagRouter)
+app.use('/api/v1/admin/get-tags', getTagsRouter)
 
 mongoose.connect(dbURI)
     .then(() => {

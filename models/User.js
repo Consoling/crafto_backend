@@ -59,9 +59,16 @@ const userSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
   },
-});
+  preferences: {
+    defaultFont: { type: String, default: "Arial" },
+    theme: { type: String, default: "light" }
+  },
+  savedTemplates: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserTemplate" }]
+},
+  { timestamps: true }
+);
 
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
