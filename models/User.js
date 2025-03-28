@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     match: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/, // Validate phone number with country code
-    isVerified: Boolean
+    isVerified: Boolean,
+    
   },
   password: {
     type: String,
