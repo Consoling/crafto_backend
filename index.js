@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors(corsOptions))
-app.options('*', cors(corsOptions)); 
+
 expressWs(app); 
 
 const PORT = process.env.CRAFTO_MAINLINE_SERVER_PORT;
