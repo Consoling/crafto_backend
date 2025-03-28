@@ -7,12 +7,26 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const expressWs = require('express-ws');
 
+const corsOptions = {
+    origin: [
+      'http://147.93.98.72:3000', 
+      'http://147.93.98.72:3570',
+      'http://localhost:3000',    
+      'http://localhost:3570',    
+      'https://www.perfectphotoframe.com' 
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true 
+  };
+
 const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors())
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions)); 
 expressWs(app); 
 
 const PORT = process.env.CRAFTO_MAINLINE_SERVER_PORT;
