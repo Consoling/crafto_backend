@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 const JWT_EXPIRATION = '4h';
-const REFRESH_TOKEN_EXPIRATION = '7d';
+const REFRESH_TOKEN_EXPIRATION = '28d';
 
 router.post('/', async (req, res) => {
   const { phoneNumber, password } = req.body;
@@ -20,38 +20,7 @@ router.post('/', async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({message: 'Phone number already exists. Please Sign in'})
-      // If the user exists, create a session
-      // const accessToken = jwt.sign(
-      //   { userId: existingUser._id, phoneNumber: existingUser.phoneNumber, isVerified: existingUser.isVerified },
-      //   JWT_SECRET,
-      //   { expiresIn: JWT_EXPIRATION }
-      // );
-
-      // const refreshToken = jwt.sign(
-      //   { userId: existingUser._id, phoneNumber: existingUser.phoneNumber },
-      //   JWT_SECRET,
-      //   { expiresIn: REFRESH_TOKEN_EXPIRATION }
-      // );
-
-      // existingUser.accessToken = accessToken;
-      // existingUser.refreshToken = refreshToken;
-      // await existingUser.save();
-
-      // res.cookie('refresh_token', refreshToken, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === 'production',
-      //   maxAge: 7 * 24 * 60 * 60 * 1000,
-      //   sameSite: 'Strict',
-      // });
-
-      // const redirectTo = existingUser.username ? '/home' : '/user-handle-creation';
-
-      // return res.status(200).json({
-      //   message: 'User logged in successfully',
-      //   accessToken,
-      //   userId: existingUser._id,
-      //   redirectTo,
-      // });
+     
     } 
     else {
      

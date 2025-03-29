@@ -37,14 +37,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  // email: {
-  //   type: String,
-  //   required: false,
-  //   unique: true,
-  //   sparse: true,
-  //   lowercase: true,
-  //   match: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
-  // },
+ 
   language: {
     type: String,
     default: "en",
