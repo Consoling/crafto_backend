@@ -45,6 +45,7 @@ const logoutRouter = require('./routes/sign-out');
 const refreshTokenRouter = require('./routes/refresh-token');
 const getDataRouter = require('./routes/fetch-data')
 const updateDataRouter = require('./routes/update-data')
+const verifyTokenRouter = require('./routes/verify-token')
 const CronDeployRouter = require('./routes/cron-update')
 
 // Admin Routes
@@ -70,6 +71,7 @@ app.use('/api/v1/logout', logoutRouter)
 app.use('/api/v1/refresh-token', refreshTokenRouter)
 app.use('/api/v1/user', getDataRouter)
 app.use('/api/v1/user', updateDataRouter)
+app.use('/api/v1/verify-token', verifyTokenRouter)
 app.use('/api/v1/cron-update', CronDeployRouter)
 
 // Admin Routes

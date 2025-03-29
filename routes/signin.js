@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 const JWT_EXPIRATION = '4h';
-const REFRESH_TOKEN_EXPIRATION = '7d';
+const REFRESH_TOKEN_EXPIRATION = '28d';
 
 router.post('/', async (req, res) => {
     const { phoneNumber, password } = req.body;
@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
 
         // Send the response
         res.status(200).json({
-            message: 'Login successful',
+            message: 'Login successful',    
             accessToken,
             userId: existingUser._id,
             redirectTo,
