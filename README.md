@@ -47,7 +47,13 @@ To successfully onboard a user, the following fields must be provided in the req
 
 
 
+***LINKS***
+1. Installing  mongo in ubuntu:
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
 
 
 
+***KNOWN PROBLEMS YOU CAN FACE***
 
+1. Error: errmsg: 'E11000 duplicate key error collection: craftoDB.users index: email_1 dup key: { email: null }',    
+  Solution: Connect to SSH | type mongosh and press enter | type use craftoDB and press enter | type db.users.dropIndex('email_1') and press enter | Done ✅

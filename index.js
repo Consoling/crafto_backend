@@ -9,12 +9,13 @@ const expressWs = require('express-ws');
 
 const corsOptions = {
     origin: [
-      'http://147.93.98.72:3000',
+      
       'http://147.93.98.72:3007',     
       'http://147.93.98.72:3570',
       'http://localhost:3000',    
       'http://localhost:3570',   
       'http://localhost:3007' , 
+      'http://147.93.98.72:3000/',
       'https://www.perfectphotoframe.com' 
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
